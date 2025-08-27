@@ -51,7 +51,7 @@ There are two required builds: a program called IOAPI that handles all of the in
   cd ioapi-3.2
   git checkout -b 20200828
   ```
-3. Modify the Makefile with the path and compiler information you identified in Step 1.
+3. Modify the I/O API top-level Makefile with the path and compiler information you identified in Step 1.
   ```
   cp Makefile.template Makefile
   vi Makefile
@@ -65,5 +65,6 @@ There are two required builds: a program called IOAPI that handles all of the in
     3. Comment out lines 192 and 193 (type # in front of text).
     4. Save the changes to the Makefile and exit the document `:wq`.
 4. Move to the ioapi directory and modify the Makeinclude.BIN file corresponding to the BIN you chose in the Makefile
-   1. On Aire, `vi Makeinclude.Linux2_x86_64ifx`
-   2. 
+   1. `cd ioapi`
+   2. On Aire, `vi Makeinclude.Linux2_x86_64ifx`
+   3. 
