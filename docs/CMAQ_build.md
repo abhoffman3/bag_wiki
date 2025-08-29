@@ -23,28 +23,21 @@ There are a few requirements for building CMAQ. Assuming that you are building t
 ### Building the model
 There are two required builds: a program called IOAPI that handles all of the input and output of files and the CMAQ model itself. Start with IOAPI (and be aware that this is the more painful build of the two).
 #### Building I/O API
-1. Identify the path for netcdf, netcdf-f, pnetcdf and MPI. Also identify your compiler for C, C++, and Fortran. On Aire, to do this, you will first need to load the modules.
-   ```
-   module load intel/oneapi/tbb/2022.0
-   module load intel/oneapi/compiler-rt/2025.0.4
-   module load intel/oneapi/umf/0.9.1
-   module load intel/oneapi/compiler/2025.0.4
-   module load intel/oneapi/mpi/2021.14
-   ```
-  Then you can type `which mpirun` for find the path to the MPI executables. This will return something like `/opt/apps/pkg/compilers/intel/oneapi/2025.0.1.47/mpi/2021.14/bin/mpirun` but we actually want the library path not the bin path. So change the path to `/opt/apps/pkg/compilers/intel/oneapi/2025.0.1.47/mpi/2021.14/lib` and check that the MPI libraries (libmpi.so) are stored there. There are other methods of finding where the various libraries are as well. Use what works for you. 
-  For netcdf, netcdf-f, and pnetcdf, load the modules then use the following commands to find the path to these libraries.
-  ```
-  nc-config --libs
-  nf-config --flibs
-  pnetcdf-config --libdir
-  ```
-**** how did Richard set this up? ****
-  Finally, identify the compilers. On Aire with Intel OneAPI, these are 
-  ```
-  CC   = icx
-  CXX  = icpx
-  FC   = ifx
-  ```
+1. Identify the path for netcdf, netcdf-f, pnetcdf and MPI. Also identify your compiler for C, C++, and Fortran. On Aire, to do this, you will first need to load the modules through the CEMAC interface.
+     1. Source the CEMAC shell script that will allow you to load the modules. `. /users/cemac/cemac.sh`
+     2. Load the necessary modules `module load intel/2025.2.0 intelmpi/2025.2.0 hdf5 netcdf/4.9.3`. This will load the modules from the CEMAC builds, and you will be able to see the location of where each is built.
+     3. Type `module avail` and the available modules, including those you have loaded will show. The paths for each build are listed above each, but you can also check using certain commands. For example, for netcdf, netcdf-f, and pnetcdf, load the modules then use the following commands to find the path to these libraries.
+     ```
+     nc-config --libs
+     nf-config --flibs
+     pnetcdf-config --libdir
+     ```
+     4. Finally, identify the compilers. On Aire with Intel OneAPI, these are 
+      ```
+     CC   = icx
+     CXX  = icpx
+     FC   = ifx
+     ```
 2. Download I/O API
   ```
   git clone https://github.com/cjcoats/ioapi-3.2
@@ -67,4 +60,12 @@ There are two required builds: a program called IOAPI that handles all of the in
 4. Move to the ioapi directory and modify the Makeinclude.BIN file corresponding to the BIN you chose in the Makefile
    1. `cd ioapi`
    2. On Aire, `vi Makeinclude.Linux2_x86_64ifx`
-   3. 
+   3. Modify the compilers to match what you found in step 1. (Also add the FC flags shown below).
+      ```
+      CC   = icx
+      CXX  = icpx
+      FC   = ifx -auto -warn notruncated_source -Bstatic -static-intel
+      ```
+   4. On lines 23 and 24, add or modify the existing flag to `-qopenmp`
+5. 
+
